@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Braza Burger — Peça pelo WhatsApp</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display+SC:wght@700&family=Karla:wght@400;500;600;700;800&display=swap');
+:root{
+  --bg:#171009; --surface:#221810; --surface-2:#2C2015; --border:#3A2B1C;
+  --fg:#F7EFE5; --muted:#B8A48D; --primary:#F97316; --primary-2:#EA580C;
+  --green:#22C55E; --green-2:#16A34A; --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Karla',system-ui,sans-serif;background:var(--bg);color:var(--fg);font-size:16px;line-height:1.5;min-height:100dvh;padding-bottom:96px}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit;touch-action:manipulation}
+svg{display:block;flex-shrink:0}
+.wrap{max-width:520px;margin:0 auto;padding:0 16px}
+
+/* Header */
+.hero{background:linear-gradient(160deg,#2C1608 0%,#171009 70%);border-bottom:1px solid var(--border);padding:26px 0 18px;text-align:center}
+.flame{width:52px;height:52px;margin:0 auto 10px;border-radius:14px;background:linear-gradient(135deg,var(--primary),#DC2626);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(249,115,22,.35)}
+.hero h1{font-family:'Playfair Display SC',serif;font-size:1.8rem;letter-spacing:.02em;color:var(--fg)}
+.hero .tag{color:var(--primary);font-weight:700;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase}
+.status{display:inline-flex;align-items:center;gap:7px;margin-top:10px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:6px 14px;font-size:.8rem;font-weight:600;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green)}
+
+/* Tabs */
+.tabs{position:sticky;top:0;z-index:20;background:rgba(23,16,9,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs-inner{display:flex;gap:6px;padding:10px 16px;max-width:520px;margin:0 auto}
+.tab{white-space:nowrap;padding:9px 16px;border-radius:999px;font-weight:700;font-size:.85rem;color:var(--muted);border:1px solid transparent;min-height:38px}
+.tab.active{background:var(--primary);color:#1A0D02}
+.tab:not(.active):hover{border-color:var(--border)}
+
+/* Menu */
+.section-title{font-family:'Playfair Display SC',serif;font-size:1.25rem;margin:22px 0 12px;color:var(--fg)}
+.item{display:flex;gap:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px}
+.thumb{width:74px;height:74px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#1A0D02}
+.item-info{flex:1;min-width:0}
+.item-info h3{font-size:1rem;font-weight:800}
+.item-info p{font-size:.82rem;color:var(--muted);margin:3px 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.item-foot{display:flex;align-items:center;justify-content:space-between}
+.price{font-weight:800;font-size:1rem;color:var(--primary);font-variant-numeric:tabular-nums}
+.add{display:flex;align-items:center;gap:12px}
+.add button{width:40px;height:40px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:800;color:var(--primary);transition:transform .12s,background .15s}
+.add button:active{transform:scale(.92)}
+.add .plus{background:var(--primary);color:#1A0D02;border-color:var(--primary)}
+.add .count{font-weight:800;min-width:18px;text-align:center;font-variant-numeric:tabular-nums}
+.add .minus{display:none}
+.item.in-cart .minus{display:flex}
+.item.in-cart{border-color:rgba(249,115,22,.5)}
+
+/* Cart bar */
+.cartbar{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:rgba(23,16,9,.95);backdrop-filter:blur(10px);border-top:1px solid var(--border);transform:translateY(110%);transition:transform .25s ease-out}
+.cartbar.show{transform:none}
+.cartbar-btn{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:488px;margin:0 auto;background:var(--green-2);color:#fff;border-radius:13px;padding:15px 18px;font-weight:800;font-size:1rem;min-height:54px;transition:background .15s}
+.cartbar-btn:hover{background:var(--green)}
+.cartbar-btn .l{display:flex;align-items:center;gap:10px}
+.cartbar-btn .badge-n{background:rgba(255,255,255,.25);border-radius:7px;padding:2px 9px;font-size:.85rem}
+
+/* Sheet */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.show{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--surface);border-radius:20px 20px 0 0;border:1px solid var(--border);border-bottom:none;max-height:88dvh;display:flex;flex-direction:column;transform:translateY(105%);transition:transform .28s ease-out}
+.sheet.show{transform:none}
+.sheet-hd{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 12px}
+.sheet-hd h2{font-family:'Playfair Display SC',serif;font-size:1.2rem}
+.close{width:40px;height:40px;border-radius:10px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.sheet-body{overflow-y:auto;padding:0 20px;flex:1}
+.c-item{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border);font-size:.92rem}
+.c-item .nm{flex:1;font-weight:600}
+.c-item .qc{display:flex;align-items:center;gap:8px}
+.c-item .qc button{width:32px;height:32px;border-radius:8px;background:var(--surface-2);border:1px solid var(--border);color:var(--primary);font-weight:800;display:flex;align-items:center;justify-content:center}
+.c-item .pr{font-weight:700;min-width:76px;text-align:right;font-variant-numeric:tabular-nums;font-size:.88rem}
+.mode{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.mode button{padding:12px;border-radius:11px;background:var(--surface-2);border:1.5px solid var(--border);font-weight:700;font-size:.88rem;color:var(--muted)}
+.mode button.sel{border-color:var(--primary);color:var(--primary);background:rgba(249,115,22,.08)}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:5px}
+.field input{width:100%;background:var(--surface-2);border:1.5px solid var(--border);border-radius:11px;padding:13px;font:inherit;color:var(--fg);min-height:48px}
+.field input:focus{outline:none;border-color:var(--primary)}
+.total-row{display:flex;justify-content:space-between;font-weight:800;font-size:1.1rem;padding:14px 0}
+.sheet-ft{padding:12px 20px calc(16px + env(safe-area-inset-bottom));border-top:1px solid var(--border)}
+.wa-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;background:var(--green-2);color:#fff;border-radius:13px;padding:16px;font-weight:800;font-size:1.02rem;text-decoration:none;min-height:54px;transition:background .15s,transform .12s}
+.wa-btn:active{transform:scale(.98)}
+.wa-btn:hover{background:var(--green)}
+.wa-btn.disabled{background:#4A5568;pointer-events:none}
+.empty{text-align:center;color:var(--muted);padding:30px 0;font-size:.9rem}
+
+footer{padding:26px 0 30px;text-align:center;color:var(--muted);font-size:.78rem}
+footer .demo-tag{display:inline-block;margin-top:8px;background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.35);color:var(--primary);border-radius:999px;padding:4px 12px;font-weight:700;font-size:.72rem}
+@media (prefers-reduced-motion:reduce){.cartbar,.sheet,.overlay{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="flame">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="#1A0D02"><path d="M12 23c-4.97 0-8-3.13-8-7.5 0-3.02 1.9-5.48 3.5-7.5C9 6 10 4 10 1c3.5 2 8 6.5 8 11 0 .84-.13 1.6-.36 2.28C16.5 12.5 15 11 15 11c0 3-3 4.5-3 7.5 0 1.6.9 3.13 2.4 4.13-.75.24-1.55.37-2.4.37z"/></svg>
+    </div>
+    <div class="tag">Hamburgueria artesanal</div>
+    <h1>Braza Burger</h1>
+    <div class="status"><span class="dot"></span>Aberto agora · entrega em 30–45 min</div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Categorias">
+  <div class="tabs-inner" id="tabs"></div>
+</nav>
+
+<main class="wrap" id="menu"></main>
+
+<footer>
+  <div class="wrap">
+    Braza Burger · Rua Exemplo, 456 · Sua Cidade/UF · Ter–Dom, 18h–23h
+    <br><span class="demo-tag">Página de demonstração — empresa fictícia</span>
+  </div>
+</footer>
+
+<div class="cartbar" id="cartbar">
+  <button class="cartbar-btn" onclick="openCart()">
+    <span class="l">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="21" r="1.5"/><circle cx="19" cy="21" r="1.5"/><path d="M2 3h3l2.6 12.4a2 2 0 002 1.6h8.9a2 2 0 002-1.6L22 7H6"/></svg>
+      <span class="badge-n" id="cartCount">0</span> Ver pedido
+    </span>
+    <span id="cartTotal">R$ 0</span>
+  </button>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<section class="sheet" id="sheet" aria-label="Seu pedido">
+  <div class="sheet-hd">
+    <h2>Seu pedido</h2>
+    <button class="close" onclick="closeCart()" aria-label="Fechar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="sheet-body">
+    <div id="cartItems"></div>
+    <div class="mode">
+      <button id="mEntrega" class="sel" onclick="setMode('entrega')">Entrega</button>
+      <button id="mRetirada" onclick="setMode('retirada')">Retirada</button>
+    </div>
+    <div class="field"><label for="nome">Seu nome</label><input id="nome" autocomplete="name" placeholder="Como podemos te chamar?" oninput="refreshWa()"></div>
+    <div class="field" id="endField"><label for="end">Endereço de entrega</label><input id="end" autocomplete="street-address" placeholder="Rua, número, bairro" oninput="refreshWa()"></div>
+    <div class="total-row"><span>Total</span><span id="sheetTotal">R$ 0</span></div>
+  </div>
+  <div class="sheet-ft">
+    <a class="wa-btn disabled" id="waSend" href="#" target="_blank" rel="noopener">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.8h-.01a9.87 9.87 0 01-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.82 9.82 0 01-1.51-5.26c0-5.45 4.44-9.88 9.9-9.88a9.82 9.82 0 016.99 2.9 9.82 9.82 0 012.89 7c0 5.45-4.44 9.88-9.89 9.88zm8.42-18.3A11.8 11.8 0 0012.04 0C5.46 0 .1 5.35.1 11.92c0 2.1.55 4.15 1.6 5.96L0 24l6.27-1.64a11.94 11.94 0 005.76 1.47h.01c6.58 0 11.94-5.35 11.94-11.92 0-3.18-1.24-6.18-3.5-8.43z"/></svg>
+      Enviar pedido no WhatsApp
+    </a>
+  </div>
+</section>
+
+<script>
+// ===== CONFIG: trocar pelo número real do cliente (formato 55DDDNUMERO) =====
+const WHATSAPP = "5511999999999";
+
+const BURGER_SVG = '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 10a8 8 0 0116 0z"/><path d="M2 14h20M4 18h16a2 2 0 002 2H2a2 2 0 002-2z" transform="translate(0,-1)"/><path d="M3 14c2 1.5 4-1.5 6 0s4-1.5 6 0 4-1.5 6 0" transform="translate(-1.5,0.5) scale(0.95)"/></svg>';
+const FRIES_SVG  = '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 9l-1 12h12L17 9M9 9V4m3 5V3m3 6V5"/><path d="M5 9h14"/></svg>';
+const DRINK_SVG  = '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3h12l-1.5 18h-9L6 3z"/><path d="M6 8h12M12 3l2-2"/></svg>';
+const SWEET_SVG  = '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a4 4 0 014 4c2 0 3 1.5 3 3 0 2-1.5 3-3 3H8c-1.5 0-3-1-3-3 0-1.5 1-3 3-3a4 4 0 014-4z"/><path d="M8 13l1 8h6l1-8"/></svg>';
+
+const MENU = [
+  {cat:'Burgers', color:'linear-gradient(135deg,#F97316,#DC2626)', icon:BURGER_SVG, items:[
+    {id:'b1', name:'Braza Clássico', desc:'Smash 160g, queijo prato, cebola caramelizada e molho da casa no brioche', price:29.9},
+    {id:'b2', name:'Braza Duplo', desc:'2x smash 160g, cheddar duplo, bacon crocante e barbecue defumado', price:39.9},
+    {id:'b3', name:'Braza Fogo', desc:'Smash 160g, pimenta jalapeño, cream cheese e cebola crispy', price:33.9},
+    {id:'b4', name:'Braza Veggie', desc:'Burger de grão-de-bico, queijo muçarela, rúcula e maionese de ervas', price:31.9}
+  ]},
+  {cat:'Combos', color:'linear-gradient(135deg,#EAB308,#F97316)', icon:BURGER_SVG, items:[
+    {id:'c1', name:'Combo Clássico', desc:'Braza Clássico + fritas média + refrigerante lata', price:44.9},
+    {id:'c2', name:'Combo Casal', desc:'2 burgers à escolha + fritas grande + 2 bebidas', price:79.9}
+  ]},
+  {cat:'Acompanhamentos', color:'linear-gradient(135deg,#D97706,#B45309)', icon:FRIES_SVG, items:[
+    {id:'a1', name:'Fritas da casa', desc:'Porção média com páprica defumada e maionese verde', price:16.9},
+    {id:'a2', name:'Fritas com cheddar e bacon', desc:'Porção grande coberta com cheddar cremoso e bacon', price:24.9},
+    {id:'a3', name:'Onion rings', desc:'8 anéis de cebola empanados com barbecue', price:18.9}
+  ]},
+  {cat:'Bebidas', color:'linear-gradient(135deg,#0EA5E9,#2563EB)', icon:DRINK_SVG, items:[
+    {id:'d1', name:'Refrigerante lata', desc:'Coca-Cola, Guaraná ou Sprite — 350ml', price:6.9},
+    {id:'d2', name:'Suco natural', desc:'Laranja ou limão — copo 400ml', price:9.9},
+    {id:'d3', name:'Milkshake', desc:'Chocolate, morango ou baunilha — 400ml', price:17.9}
+  ]},
+  {cat:'Sobremesas', color:'linear-gradient(135deg,#EC4899,#9333EA)', icon:SWEET_SVG, items:[
+    {id:'s1', name:'Brownie com sorvete', desc:'Brownie quente, sorvete de creme e calda de chocolate', price:15.9}
+  ]}
+];
+
+let cart = {}; // id -> qty
+let mode = 'entrega';
+const flat = {}; MENU.forEach(c=>c.items.forEach(i=>flat[i.id]=i));
+
+function fmt(v){return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
+
+// render tabs + menu
+document.getElementById('tabs').innerHTML = MENU.map((c,i)=>
+  `<button class="tab${i===0?' active':''}" onclick="jump('${c.cat}',this)">${c.cat}</button>`).join('');
+document.getElementById('menu').innerHTML = MENU.map(c=>`
+  <h2 class="section-title" id="sec-${c.cat}">${c.cat}</h2>
+  ${c.items.map(i=>`
+  <article class="item" id="item-${i.id}">
+    <div class="thumb" style="background:${c.color}">${c.icon}</div>
+    <div class="item-info">
+      <h3>${i.name}</h3>
+      <p>${i.desc}</p>
+      <div class="item-foot">
+        <span class="price">${fmt(i.price)}</span>
+        <span class="add">
+          <button class="minus" onclick="ch('${i.id}',-1)" aria-label="Remover">−</button>
+          <span class="count" id="ct-${i.id}"></span>
+          <button class="plus" onclick="ch('${i.id}',1)" aria-label="Adicionar">+</button>
+        </span>
+      </div>
+    </div>
+  </article>`).join('')}`).join('');
+
+function jump(cat,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===btn));
+  document.getElementById('sec-'+cat).scrollIntoView({behavior:'smooth',block:'start'});
+}
+function ch(id,d){
+  cart[id]=(cart[id]||0)+d;
+  if(cart[id]<=0) delete cart[id];
+  const el=document.getElementById('item-'+id);
+  el.classList.toggle('in-cart', !!cart[id]);
+  document.getElementById('ct-'+id).textContent=cart[id]||'';
+  refresh();
+}
+function totals(){
+  let n=0,t=0;
+  for(const id in cart){n+=cart[id];t+=cart[id]*flat[id].price;}
+  return {n,t};
+}
+function refresh(){
+  const {n,t}=totals();
+  document.getElementById('cartbar').classList.toggle('show',n>0);
+  document.getElementById('cartCount').textContent=n;
+  document.getElementById('cartTotal').textContent=fmt(t);
+  renderCart(); refreshWa();
+  if(n===0) closeCart();
+}
+function renderCart(){
+  const box=document.getElementById('cartItems'), {t}=totals();
+  const ids=Object.keys(cart);
+  box.innerHTML = ids.length===0 ? '<p class="empty">Seu pedido está vazio.</p>' :
+    ids.map(id=>`
+    <div class="c-item">
+      <span class="nm">${flat[id].name}</span>
+      <span class="qc">
+        <button onclick="ch('${id}',-1)" aria-label="Menos">−</button>
+        <span>${cart[id]}</span>
+        <button onclick="ch('${id}',1)" aria-label="Mais">+</button>
+      </span>
+      <span class="pr">${fmt(cart[id]*flat[id].price)}</span>
+    </div>`).join('');
+  document.getElementById('sheetTotal').textContent=fmt(t);
+}
+function setMode(m){
+  mode=m;
+  document.getElementById('mEntrega').classList.toggle('sel',m==='entrega');
+  document.getElementById('mRetirada').classList.toggle('sel',m==='retirada');
+  document.getElementById('endField').style.display = m==='entrega' ? '' : 'none';
+  refreshWa();
+}
+function refreshWa(){
+  const {n,t}=totals();
+  const nome=document.getElementById('nome').value.trim();
+  const end=document.getElementById('end').value.trim();
+  const btn=document.getElementById('waSend');
+  const ok = n>0 && nome && (mode==='retirada' || end);
+  btn.classList.toggle('disabled',!ok);
+  if(!ok){btn.removeAttribute('href');return;}
+  const linhas=Object.keys(cart).map(id=>`• ${cart[id]}x ${flat[id].name} — ${fmt(cart[id]*flat[id].price)}`).join('\n');
+  const msg=`🍔 *Pedido — Braza Burger*\n\n${linhas}\n\n*Total: ${fmt(t)}*\n\nNome: ${nome}\n${mode==='entrega'?`Entrega em: ${end}`:'Retirada no balcão'}`;
+  btn.href=`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
+}
+function openCart(){renderCart();document.getElementById('overlay').classList.add('show');document.getElementById('sheet').classList.add('show');}
+function closeCart(){document.getElementById('overlay').classList.remove('show');document.getElementById('sheet').classList.remove('show');}
+</script>
+</body>
+</html>
