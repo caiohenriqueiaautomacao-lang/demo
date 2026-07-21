@@ -78,6 +78,25 @@
 
   .pn-footer{padding:36px 32px;display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;font-size:13px;color:#12241a70}
   .pn-footer .brand{font-family:Georgia,serif;font-style:italic;font-size:18px;color:#1c3829}
+  .pn-social{display:flex;gap:14px}
+  .pn-social a{color:#1c3829;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:#1c38290f}
+  .pn-social a:hover{background:#1c382922}
+
+  .pn-map{width:100%;height:150px;border:0;border-radius:12px;margin-bottom:14px;filter:saturate(.85)}
+  .pn-unit-btns{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+  .pn-link-mapa{font-size:13px;font-weight:700;text-decoration:none;color:#1c3829}
+  .pn-link-mapa:hover{color:#3d6b4b}
+
+  .pn-faq{display:flex;flex-direction:column;gap:12px;max-width:760px}
+  .pn-faq-item{border:1px solid #12241a14;border-radius:12px;background:#fff;padding:4px 20px}
+  .pn-faq-item summary{padding:16px 0;font-weight:700;font-size:15px;color:#12241a;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .pn-faq-item summary::-webkit-details-marker{display:none}
+  .pn-faq-item summary::after{content:"+";font-size:20px;color:#1c3829;flex:none}
+  .pn-faq-item[open] summary::after{content:"–"}
+  .pn-faq-item p{margin:0 0 18px;font-size:14px;line-height:1.6;color:#12241a90}
+
+  .pn-float-wa{position:fixed;right:20px;bottom:20px;z-index:60;width:56px;height:56px;border-radius:50%;background:#25D366;color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(18,36,26,.28)}
+  .pn-float-wa:hover{filter:brightness(1.05)}
 
   /* ---- mobile ---- */
   @media (max-width: 720px) {
@@ -115,6 +134,7 @@
       <a href="#servicos">Serviços</a>
       <a href="#unidades">Unidades</a>
       <a href="#depoimentos">Aumigos</a>
+      <a href="#duvidas">Dúvidas</a>
       <a href="#contato">Contato</a>
     </span>
     <button class="pn-btn" onclick="pnAbrirWhatsApp()">Agende pelo WhatsApp</button>
@@ -223,7 +243,11 @@
           <h3>Unidade Major Cardim</h3>
           <p>Rua Major Cardim, 1815 — Ribeirão Pires, SP</p>
           <p class="hours">Seg–Sex 8h–19h · Sáb 8h–14h</p>
-          <button class="pn-btn-dark" style="padding:10px 16px;font-size:13px" onclick="pnAbrirWhatsApp('', 'Unidade Major Cardim')">Agendar nesta unidade</button>
+          <iframe class="pn-map" title="Mapa — Unidade Major Cardim" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Rua%20Major%20Cardim%2C%201815%2C%20Ribeir%C3%A3o%20Pires%2C%20SP&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe>
+          <div class="pn-unit-btns">
+            <button class="pn-btn-dark" style="padding:10px 16px;font-size:13px" onclick="pnAbrirWhatsApp('', 'Unidade Major Cardim')">Agendar nesta unidade</button>
+            <a class="pn-link-mapa" href="https://www.google.com/maps/dir/?api=1&destination=Rua+Major+Cardim%2C+1815%2C+Ribeir%C3%A3o+Pires%2C+SP" target="_blank" rel="noopener">Como chegar →</a>
+          </div>
         </div>
       </div>
       <div class="pn-card">
@@ -232,7 +256,11 @@
           <h3>Unidade Kaethe Richers</h3>
           <p>Av. Kaethe Richers, 1730 — Ribeirão Pires, SP</p>
           <p class="hours">Seg–Sex 8h–19h · Sáb 8h–14h</p>
-          <button class="pn-btn-dark" style="padding:10px 16px;font-size:13px" onclick="pnAbrirWhatsApp('', 'Unidade Kaethe Richers')">Agendar nesta unidade</button>
+          <iframe class="pn-map" title="Mapa — Unidade Kaethe Richers" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Avenida%20Kaethe%20Richers%2C%201730%2C%20Ribeir%C3%A3o%20Pires%2C%20SP&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe>
+          <div class="pn-unit-btns">
+            <button class="pn-btn-dark" style="padding:10px 16px;font-size:13px" onclick="pnAbrirWhatsApp('', 'Unidade Kaethe Richers')">Agendar nesta unidade</button>
+            <a class="pn-link-mapa" href="https://maps.app.goo.gl/C8oUiLHBmSPcnDYSA" target="_blank" rel="noopener">Como chegar →</a>
+          </div>
         </div>
       </div>
     </div>
@@ -266,6 +294,37 @@
   </div>
 </section>
 
+<section id="duvidas" class="pn-section">
+  <h2>Dúvidas frequentes</h2>
+  <p class="lead">Perguntas que os aumigos e seus tutores mais fazem.</p>
+  <div class="pn-faq">
+    <details class="pn-faq-item">
+      <summary>Quais serviços estão incluídos nas consultas veterinárias?</summary>
+      <p>Nossas consultas abrangem avaliação geral, orientação sobre vacinas, exames laboratoriais, e diagnóstico de problemas de saúde em animais de estimação e silvestres.</p>
+    </details>
+    <details class="pn-faq-item">
+      <summary>A clínica oferece serviços de raio-X para animais?</summary>
+      <p>Sim, contamos com raio-X de alta precisão para diagnosticar fraturas, doenças internas e outras condições.</p>
+    </details>
+    <details class="pn-faq-item">
+      <summary>A clínica realiza cirurgias de emergência?</summary>
+      <p>Sim, realizamos cirurgias de emergência, incluindo procedimentos gerais e ortopédicos, sempre priorizando o bem-estar do animal.</p>
+    </details>
+    <details class="pn-faq-item">
+      <summary>Vocês realizam atendimento em domicílio?</summary>
+      <p>Sim, oferecemos atendimento em domicílio para consultas, vacinas e até procedimentos simples, proporcionando mais conforto ao pet.</p>
+    </details>
+    <details class="pn-faq-item">
+      <summary>Quais exames laboratoriais vocês oferecem?</summary>
+      <p>Realizamos exames laboratoriais completos, incluindo hemogramas, bioquímica e testes específicos para diagnóstico preciso.</p>
+    </details>
+    <details class="pn-faq-item">
+      <summary>Vocês atendem animais silvestres?</summary>
+      <p>Sim, oferecemos consultas, exames laboratoriais e procedimentos para animais silvestres, sempre com profissionais especializados.</p>
+    </details>
+  </div>
+</section>
+
 <section id="contato" class="pn-final-cta">
   <h2>Marca uma visita pro seu aumigo?</h2>
   <p>Fale com a gente pelo WhatsApp e monte seu orçamento em minutos.</p>
@@ -275,8 +334,19 @@
 <footer class="pn-footer">
   <span class="brand">Pantaneiro</span>
   <span>© 2026 Clínica Veterinária Pantaneiro — Ribeirão Pires, SP</span>
-  <span>@pantaneiro.vet</span>
+  <span class="pn-social">
+    <a href="https://www.instagram.com/vet_pantaneiro/" target="_blank" rel="noopener" aria-label="Instagram da Pantaneiro">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+    </a>
+    <a href="https://www.facebook.com/share/15WAnzQZuF/" target="_blank" rel="noopener" aria-label="Facebook da Pantaneiro">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h-2a5 5 0 0 0-5 5v2H6v4h2v7h4v-7h3l1-4h-4V8a1 1 0 0 1 1-1h3z"/></svg>
+    </a>
+  </span>
 </footer>
+
+<button class="pn-float-wa" onclick="pnAbrirWhatsApp()" aria-label="Falar no WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 6.3A8 8 0 0 0 4.2 16.2L3 21l4.9-1.3A8 8 0 1 0 17.6 6.3ZM12 18.5a6.4 6.4 0 0 1-3.3-.9l-.2-.1-2.6.7.7-2.5-.2-.3A6.5 6.5 0 1 1 18.5 12 6.5 6.5 0 0 1 12 18.5Zm3.6-4.9c-.2-.1-1.2-.6-1.4-.7s-.3-.1-.5.1-.6.7-.8.9-.3.2-.5.1a5.2 5.2 0 0 1-2.6-2.3c-.2-.3 0-.5.1-.6l.4-.5c.1-.2.1-.3 0-.5l-.6-1.4c-.1-.3-.3-.2-.4-.2h-.4a.8.8 0 0 0-.6.3 2.5 2.5 0 0 0-.7 1.8c0 1 .7 2 1.6 3.1a7.5 7.5 0 0 0 3.7 2.5c1.3.4 1.8.3 2.1.2s1-.5 1.1-1 .1-.9.1-1-.1-.1-.3-.2Z"/></svg>
+</button>
 
 <script>
   var PN_WHATSAPP_NUMBER = '5511942807743';
